@@ -19,7 +19,7 @@ public class MainApplet extends PApplet{
 	JSONObject data;
 	JSONArray nodes, links;
 	private ArrayList<Character> characters = new ArrayList<Character>();
-	
+	private ArrayList<Character> charInCircle = new ArrayList<Character>();
 	private final static int width = 1200, height = 650;
 	
 	public void setup() {
@@ -32,8 +32,11 @@ public class MainApplet extends PApplet{
 
 	public void draw() {
 		background(255);
+		textSize(50);
+		text("Star War 1" , 478 , 80);
 		fill(255);
 		stroke(203, 218, 161);
+		
 		if (dragNode != null && dist(dragNode.x, dragNode.y, 600, 390) < 470 / 2) {
 			strokeWeight(7);
 		} else strokeWeight(5);
