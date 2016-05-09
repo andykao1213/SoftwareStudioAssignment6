@@ -32,6 +32,12 @@ public class MainApplet extends PApplet{
 
 	public void draw() {
 		background(255);
+		fill(255);
+		stroke(203, 218, 161);
+		if (dragNode != null && dist(dragNode.x, dragNode.y, 600, 390) < 470 / 2) {
+			strokeWeight(7);
+		} else strokeWeight(5);
+		ellipse(600, 390, 470, 470);
 		for(Character character: this.characters){
 			if(character.reseting == true) this.nodeReset(character);
 			character.display();
