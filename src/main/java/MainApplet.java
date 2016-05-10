@@ -1,9 +1,16 @@
 package main.java;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import controlP5.Button;
+import controlP5.CColor;
+import controlP5.ControlFont;
 import controlP5.ControlP5;
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 
@@ -16,6 +23,7 @@ public class MainApplet extends PApplet{
 	
 	private String path = "main/resources/";
 	private String file = "starwars-episode-1-interactions.json";
+	private int versionNum = 1;
 	private Character dragNode;
 	private int inCircle = 0;
 	JSONObject data;
@@ -32,15 +40,22 @@ public class MainApplet extends PApplet{
 		loadData();
 		cp5 = new ControlP5(this);
 		// Create two buttons.
-		cp5.addButton("button1").setLabel("ADD ALL")
-								.setPosition(875, 50)
-								.setSize(200, 50);
-		cp5.addButton("button2").setLabel("CLEAR")
-								.setPosition(875, 150)
-								.setSize(200, 50);
+	    cp5.addButton("button1").setLabel("ADD ALL")
+	    		                .setPosition(950, 50)
+								.setSize(200, 50)
+								.setColorBackground(0xFFA8C6AF)
+								.setColorForeground(0xFFB9E4C7)
+								.setColorActive(0xFF7ACB95);
+								
+	    cp5.addButton("button2").setLabel("CLEAR")
+								.setPosition(950, 150)
+								.setSize(200, 50)
+								.setColorBackground(0xFFA8C6AF)
+								.setColorForeground(0xFFB9E4C7)
+								.setColorActive(0xFF7ACB95);
 	}
+	
 	public void button1() {
-		
 		for (Character c : characters) {
 			c.reseting = false;
 			c.inCircle = true;
@@ -57,7 +72,8 @@ public class MainApplet extends PApplet{
 	public void draw() {
 		background(255);
 		textSize(50);
-		text("Star War 1" , 478 , 60);
+		fill(0xFF5D3F32);
+		text("Star War " + versionNum , 478 , 60);
 		fill(255);
 		stroke(203, 218, 161);
 		inCircle = 0;
@@ -131,6 +147,33 @@ public class MainApplet extends PApplet{
 			characters.get(link.getInt("source")).addValue(link.getInt("value"));
 		}
 	}
+	public void keyPressed() {
+		// Change the versions.
+		if (keyCode == KeyEvent.VK_1){
+			file = "starwars-episode-1-interactions.json"; 	versionNum = 1;
+		}
+		else if (keyCode == KeyEvent.VK_2){
+			file = "starwars-episode-2-interactions.json";	versionNum = 2;
+		}
+		else if (keyCode == KeyEvent.VK_3){
+			file = "starwars-episode-3-interactions.json";	versionNum = 3;
+		}
+		else if (keyCode == KeyEvent.VK_4){
+			file = "starwars-episode-4-interactions.json"; versionNum = 4;
+		}
+		else if (keyCode == KeyEvent.VK_5){
+			file = "starwars-episode-5-interactions.json"; versionNum = 5;
+		}
+		else if (keyCode == KeyEvent.VK_6){
+			file = "starwars-episode-6-interactions.json"; versionNum = 6;
+		}
+		else if (keyCode == KeyEvent.VK_7){
+			file = "starwars-episode-7-interactions.json"; versionNum = 7;
+		}
+		characters.clear();
+		loadData();
+	}
+	
 	private void nodeReset(Character c){
 		
 			c.x = c.originX + (c.x - c.originX)* (float)0.9;

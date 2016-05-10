@@ -48,7 +48,7 @@ public class Character {
 				parent.noFill();
 				parent.stroke(200);
 				if(values.get(targets.indexOf(c)) > 10)parent.strokeWeight((float)values.get(targets.indexOf(c)) / 6);
-				else parent.strokeWeight((float)values.get(targets.indexOf(c)) / 3);
+				else parent.strokeWeight((float)values.get(targets.indexOf(c)) / 2);
 				float a1 = (x + 600) / 2;
 				float b1 = (y + 360) / 2;
 				float a2 = (c.x + 600) / 2;
