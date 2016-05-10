@@ -2,6 +2,7 @@ package main.java;
 
 import java.util.ArrayList;
 
+import controlP5.ControlP5;
 import processing.core.PApplet;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
@@ -16,10 +17,12 @@ public class MainApplet extends PApplet{
 	private String path = "main/resources/";
 	private String file = "starwars-episode-1-interactions.json";
 	private Character dragNode;
+	private int inCircle = 0;
 	JSONObject data;
 	JSONArray nodes, links;
 	private ArrayList<Character> characters = new ArrayList<Character>();
-	private ArrayList<Character> charInCircle = new ArrayList<Character>();
+	private ArrayList<Character> nodeIncircle = new ArrayList<Character>();
+	private ControlP5 cp5;
 	private final static int width = 1200, height = 650;
 	
 	public void setup() {
@@ -27,52 +30,86 @@ public class MainApplet extends PApplet{
 		size(width, height);
 		smooth();
 		loadData();
-		
+		cp5 = new ControlP5(this);
+		// Create two buttons.
+		cp5.addButton("button1").setLabel("ADD ALL")
+								.setPosition(875, 50)
+								.setSize(200, 50);
+		cp5.addButton("button2").setLabel("CLEAR")
+								.setPosition(875, 150)
+								.setSize(200, 50);
 	}
+	public void button1() {
+		
+		for (Character c : characters) {
+			c.reseting = false;
+			c.inCircle = true;
+		}
+	}
+	
+	public void button2() {
+		// Remove all the characters out.
+		for (Character c : characters) {
+			c.inCircle = false;
 
+		}
+	}
 	public void draw() {
 		background(255);
 		textSize(50);
-		text("Star War 1" , 478 , 80);
+		text("Star War 1" , 478 , 60);
 		fill(255);
 		stroke(203, 218, 161);
-		
-		if (dragNode != null && dist(dragNode.x, dragNode.y, 600, 390) < 470 / 2) {
+		inCircle = 0;
+		if (dragNode != null && dist(dragNode.x, dragNode.y, 600, 360) < 530 / 2) {
 			strokeWeight(7);
 		} else strokeWeight(5);
-		ellipse(600, 390, 470, 470);
+		ellipse(600, 360, 530, 530);
+		nodeInCircleSetting();
 		for(Character character: this.characters){
+			if( dist(character.x , character.y , mouseX , mouseY) < character.rad / 2){
+				character.rad = 45;
+			}
+			else character.rad = 40;
+		
 			if(character.reseting == true) this.nodeReset(character);
+			
 			character.display();
 		}
+		
 	}
 	
 	public void mousePressed() {
 		
 		for(Character character: this.characters){
 			if( dist(character.x , character.y , mouseX , mouseY) < character.rad / 2){
-				character.rad = 40;
 				dragNode = character;
 			}
-			else character.rad = 45;	
-			
 		}
 			
 	}
 	public void mouseReleased() {
 		for(Character character: this.characters){
 			 character.rad = 45;
+			 
 			 if(character.inCircle == false){
-					 character.reseting = true;
+				character.reseting = true;
+			 }else{
+				 character.reseting = false;
 			 }
+			 
 		}
 		dragNode = null;
 	}
 	public void mouseDragged() {
 		if (dragNode != null) {
 			dragNode.x = mouseX;
-			dragNode.y = mouseY;
+			dragNode.y = mouseY;	
+			if (dist(dragNode.x, dragNode.y, 600, 360) < 530 / 2) {
+				dragNode.inCircle = true;
+			} else dragNode.inCircle = false;
 		}
+		
 	}
 	private void loadData(){
 		
@@ -91,7 +128,7 @@ public class MainApplet extends PApplet{
 		for(int i=0; i<links.size(); i++){
 			JSONObject link = links.getJSONObject(i);
 			characters.get(link.getInt("source")).addTarget(characters.get(link.getInt("target")));
-			characters.get(link.getInt("source")).addTarget(characters.get(link.getInt("value")));
+			characters.get(link.getInt("source")).addValue(link.getInt("value"));
 		}
 	}
 	private void nodeReset(Character c){
@@ -103,5 +140,20 @@ public class MainApplet extends PApplet{
 				c.y = c.originY;
 				c.reseting = false;
 			}
+	}
+	private void nodeInCircleSetting(){
+		
+		int num = 0;
+		for(Character cc: this.characters){
+			if(cc.inCircle == true) num++;
+		}
+		int index = 0;
+		for(Character cc: this.characters){
+			if(cc.inCircle == true && cc != dragNode){
+				cc.x = 600 + 530/2* (float)Math.cos(Math.PI*2/num*index);
+				cc.y = 360 + 530/2* (float)Math.sin(Math.PI*2/num*index);
+				index++;
+			}
+		}
 	}
 }

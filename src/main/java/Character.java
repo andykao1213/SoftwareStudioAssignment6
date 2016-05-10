@@ -14,6 +14,7 @@ public class Character {
 	private MainApplet parent;
 	public int row , col;
 	public int rad = 45;
+	public int index = 0;
 	public float x , y;
 	public float originX , originY;
 	public boolean reseting = false;
@@ -22,7 +23,7 @@ public class Character {
 	private int color;
 	private String name;
 	private ArrayList<Character> targets;
-	private ArrayList<Character> values;
+	private ArrayList<Integer> values;
 	public Character(MainApplet parent, String name, String clr ,int row , int col  ){
 
 		this.parent = parent;
@@ -36,11 +37,25 @@ public class Character {
 		this.color = (int) Long.parseLong(clr.replace("#", ""), 16);
 		this.inCircle = false;
 		this.targets = new ArrayList<Character>();
-		
+		this.values =  new ArrayList<Integer>();
 	}
 
 	public void display(){
 		
+		
+		if(this.inCircle){
+			for(Character c : targets){
+				parent.noFill();
+				parent.stroke(200);
+				if(values.get(targets.indexOf(c)) > 10)parent.strokeWeight((float)values.get(targets.indexOf(c)) / 6);
+				else parent.strokeWeight((float)values.get(targets.indexOf(c)) / 3);
+				float a1 = (x + 600) / 2;
+				float b1 = (y + 360) / 2;
+				float a2 = (c.x + 600) / 2;
+				float b2 = (c.y + 360)  / 2;
+				if (c.inCircle == true) parent.bezier(x, y, a1, b1, a2, b2, c.x, c.y); // 550 340
+			}
+		}
 		this.parent.noStroke();
 		parent.fill(color, 200);
 		parent.ellipse(x, y, rad, rad);
@@ -48,7 +63,7 @@ public class Character {
 	
 	
 	public void addTarget(Character target){ this.targets.add(target); }
-	public void addValue(Character value){ this.targets.add(value); }
+	public void addValue(Integer value){ this.values.add(value); }
 	public ArrayList<Character> getTargets(){ return this.targets; }
-	public ArrayList<Character> getValues(){ return this.values; }
+	public ArrayList<Integer> getValues(){ return this.values; }
 }
